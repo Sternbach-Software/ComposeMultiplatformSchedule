@@ -167,13 +167,13 @@ fun Schedule(
             val placeable = measurable.measure(constraints.copy(minWidth = dayWidth.roundToPx(), maxWidth = dayWidth.roundToPx(), minHeight = eventHeight, maxHeight = eventHeight))
             Pair(placeable, event)
         }
-        val todayStartOfDay = Clock.System.now().toLocalDateTime(timeZone).date.atStartOfDayIn(timeZone)
+        val startOfMinDate = minDate.atStartOfDayIn(timeZone)
         layout(width, height) {
             placeablesWithEvents.forEach { (placeable, event) ->
                 val start = event.start.toInstant(timeZone)
-                val eventOffsetMinutes =    todayStartOfDay                 .until(start, DateTimeUnit.MINUTE)
+                val eventOffsetMinutes =    startOfMinDate.until(start, DateTimeUnit.MINUTE)
                 val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
-                val eventOffsetDays =       minDate.atStartOfDayIn(timeZone).until(start, DateTimeUnit.DAY, timeZone).toInt()
+                val eventOffsetDays =       startOfMinDate.until(start, DateTimeUnit.DAY, timeZone).toInt()
                 val eventX = eventOffsetDays * dayWidth.roundToPx()
                 placeable.place(eventX, eventY)
             }
